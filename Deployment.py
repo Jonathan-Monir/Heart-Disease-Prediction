@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+
 import numpy as np
 PreProcessed_df = pd.read_csv("Heart-Disease-Prediction\PreProcessed_Heart_Disease.csv")
 data = {
@@ -21,21 +22,38 @@ data = {
 }
 
 describe_df = pd.DataFrame(data)
-
-def scale(type, input_df, dataset):
-    X = dataset.iloc[:,:-1]
-    if type == 'Min Max Scaler':
-        min_max_scaler = MinMaxScaler()
-        min_max_scaler.fit(X)
-        return min_max_scaler.transform(input_df)
+def predict(X_test, scale_type):
+    df = pd.read_csv("Heart-Disease-Prediction\PreProcessed_Heart_Disease.csv")
+    X_train = df.iloc[:,:-1].values
+    y_train = df.iloc[:,-1].values
+    if scale_type == 'Min Max Scaler':
+        scaler = MinMaxScaler()
+        scaler.fit_transform(X_train)
+        
+    elif scale_type == 'Standard Scaler':
+        scaler = StandardScaler()
+        scaler.fit_transform(X_train)
     
-    elif type == 'Standard Scaler':
-        standard_scaler = StandardScaler()
-        standard_scaler.fit(X)
-        return standard_scaler.transform(input_df)
+    
+
+    random_forest = RandomForestClassifier(max_depth = 5, n_estimators = 1000)
+    random_forest.fit(X_train,y_train)
+    return random_forest.predict(X_test)
+    
+def scale(scale_type, input_df, dataset):
+    
+    X = dataset.iloc[:,:-1]
+    if scale_type == 'Min Max Scaler':
+        scaler = MinMaxScaler()
+    
+    elif scale_type == 'Standard Scaler':
+        scaler = StandardScaler()
     
     else:
         return input_df
+    
+    scaler.fit(X)
+    return scaler.transform(input_df)
     
 def validate_age(age):
     if age < 0 or age > 120:
@@ -50,7 +68,7 @@ def validate_bp(bp):
     return True
 
 def validate_max_hr(max_hr):
-    if max_hr < 50 or max_hr > 230:
+    if max_hr < 50 or max_hr > 310:
         st.error("Please enter a valid maximum heart rate between 50 and 230.")
         return False
     return True
@@ -120,15 +138,24 @@ def app():
     slope_of_st = st.selectbox("Slope of ST", [1,2,3])
     
     st.text("Predictions:")
-    scale_type = st.selectbox("work type", ['Min Max Scaler','Standard Scaler','None'])
+    scale_type = st.selectbox("scale type", ['Min Max Scaler','Standard Scaler','None'])
     
     if st.button("Submit"):
         if age and bp and max_hr:
             st.success("All inputs are selected.")
-            st.table(scale(scale_type,create_df(age,chest_pain_type,bp,cholesterol,fbs_over_120,ekg_results,max_hr,st_depression,slope_of_st,Gender,smoking_status,work_type),PreProcessed_df))
+            st.text("This model runs with random forest.")
+            
+            created_df = create_df(age,chest_pain_type,bp,cholesterol,fbs_over_120,ekg_results,max_hr,st_depression,slope_of_st,Gender,smoking_status,work_type)
+            scaled_df = scale(scale_type,created_df,PreProcessed_df)
+            if predict(scaled_df, scale_type)[0]==0:
+                st.markdown("<h1 style='color: green;'>Doesn't have heart disease.</h1>", unsafe_allow_html=True)
+
+            else:
+                st.markdown("<h1 style='color: red;'>have heart disease.</h1>", unsafe_allow_html=True)
+                
         else:
             st.error("Please select all inputs.")
-    
+    st.title("Input Describtion.")
     st.table(describe_df)
 if __name__ == '__main__':
     app()
