@@ -18,7 +18,7 @@ During the data analysis phase, we drew conclusions from the dataset. We explore
 To build our predictive model, we implemented logistic regression, SVM, decision tree, and random forest algorithms. The performance of each model was evaluated based on accuracy, with logistic regression achieving 85% accuracy, SVM achieving 84% accuracy, decision tree achieving 76% accuracy, and random forest achieving 81% accuracy. Finally, we employed hyperparameter tuning techniques to optimize the models and select the best-performing model.
 
 # Deployment
-The best-performing model was deployed using Flask. The deployed model can be accessed [HERE]([https://www.google.com/](https://jonathan-monir-heart-disease-prediction-deployment-4uu7zl.streamlit.app/))
+The best-performing model was deployed using Flask. The deployed model can be accessed [HERE](https://jonathan-monir-heart-disease-prediction-deployment-4uu7zl.streamlit.app/)
 
 
 # Conclusion
