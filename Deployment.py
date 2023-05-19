@@ -4,7 +4,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 
 import numpy as np
-PreProcessed_df = pd.read_csv("Heart-Disease-Prediction\PreProcessed_Heart_Disease.csv")
+PreProcessed_df = pd.read_csv("PreProcessed_Heart_Disease.csv")
 data = {
     'Column': ['Age', 'Gender', 'Chest pain type', 'BP', 'Cholesterol', 'FBS over 120', 'EKG results', 'Max HR',
                'ST depression', 'Slope of ST', 'work_type', 'smoking_status', 'Heart Disease'],
@@ -23,7 +23,7 @@ data = {
 
 describe_df = pd.DataFrame(data)
 def predict(X_test, scale_type):
-    df = pd.read_csv("Heart-Disease-Prediction\PreProcessed_Heart_Disease.csv")
+    df = pd.read_csv("PreProcessed_Heart_Disease.csv")
     X_train = df.iloc[:,:-1].values
     y_train = df.iloc[:,-1].values
     if scale_type == 'Min Max Scaler':
