@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 import numpy as np
 PreProcessed_df = pd.read_csv("PreProcessed_Heart_Disease.csv")
+
 data = {
     'Column': ['Age', 'Gender', 'Chest pain type', 'BP', 'Cholesterol', 'FBS over 120', 'EKG results', 'Max HR',
                'ST depression', 'Slope of ST', 'work_type', 'smoking_status', 'Heart Disease'],
@@ -104,7 +105,11 @@ def create_df(age, chest_pain_type, bp, cholesterol, fbs, ekg, hr, st_dep, st_sl
     return input_df
 
 def app():
-    st.title("Heart Disease Prediction")
+    st.image("Home_icon.png")
+    
+    st.title("Columns description.")
+    st.table(describe_df)
+    st.title("Input")
     
     age = st.number_input("Age", min_value=0, max_value=120)
     if not validate_age(age):
@@ -137,8 +142,8 @@ def app():
     
     slope_of_st = st.selectbox("Slope of ST", [1,2,3])
     
-    st.text("Predictions:")
-    scale_type = st.selectbox("scale type", ['Min Max Scaler','Standard Scaler','None'])
+    st.title("Predictions:")
+    scale_type = st.selectbox("scale type", ['None','Min Max Scaler','Standard Scaler'])
     
     if st.button("Submit"):
         if age and bp and max_hr:
@@ -155,7 +160,5 @@ def app():
                 
         else:
             st.error("Please select all inputs.")
-    st.title("Input Describtion.")
-    st.table(describe_df)
 if __name__ == '__main__':
     app()
