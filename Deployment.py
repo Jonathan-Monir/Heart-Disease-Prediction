@@ -105,6 +105,8 @@ def create_df(age, chest_pain_type, bp, cholesterol, fbs, ekg, hr, st_dep, st_sl
     return input_df
 
 def app():
+    st.set_theme('dark')
+
     st.image("Home_icon.png")
     
     st.title("Columns description.")
